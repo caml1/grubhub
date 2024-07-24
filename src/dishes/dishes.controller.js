@@ -138,6 +138,6 @@ module.exports = {
     create,
     read: [dishExists, read],
     update: [dishExists, update],
-    delete: [dishExists, destroy],
+    delete: [destroy],
     list,
 };
