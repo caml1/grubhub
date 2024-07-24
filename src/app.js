@@ -8,6 +8,10 @@ const dishesRouter = require("./dishes/dishes.router");
 
 const app = express();
 
+app.use((req, res, next) => {
+    console.log(`Received request for ${req.path}`);
+    next();
+  });
 // You have not learned about CORS yet.
 // The following line let's this API be used by any website.
 app.use(cors());
