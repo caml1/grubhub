@@ -69,9 +69,9 @@ function read(req, res) {
 
 // Update
 function update(req, res) {
-    const dish = res.locals.dish;
-    const { dishId } = req.params;
-    const { data: { name, description,  price, image_url } = {} } = req.body;
+  const dish = res.locals.dish;
+  const { dishId } = req.params;
+  const { data: { id, name, description, price, image_url } = {} } = req.body;
 
     // Validations
     if (!name) {
@@ -105,6 +105,16 @@ function update(req, res) {
     if (foundDish.id !== dishId) {
     return res.status(400).json({ error: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}` });
     }
+    // Check if the id in the data matches the dishId in the route
+  // if (id !== dishId) {
+  //   // Update the dish
+  //   dish.name = name;
+  //   dish.description = description;
+  //   dish.price = price;
+  //   dish.image_url = image_url;
+
+  //   return res.status(400).json({ error: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}` });
+  // }
 
     // Update the dish
     dish.name = name;
