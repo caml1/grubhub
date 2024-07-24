@@ -70,33 +70,41 @@ function read(req, res) {
 // Update
 function update(req, res) {
     const dish = res.locals.dish;
+    const { dishId } = req.params;
     const { data: { name, description,  price, image_url } = {} } = req.body;
 
     // Validations
     if (!name) {
         return res.status(400).json({ error: "Dish must include a name" });
-      }
-      if (name === "") {
+    }
+    if (name === "") {
         return res.status(400).json({ error: "Dish must include a name" });
-      }
-      if (!description) {
+    }
+    if (!description) {
         return res.status(400).json({ error: "Dish must include a description" });
-      }
-      if (description === "") {
+    }
+    if (description === "") {
         return res.status(400).json({ error: "Dish must include a description" });
-      }
-      if (!price) {
+    }
+    if (!price) {
         return res.status(400).json({ error: "Dish must include a price" });
-      }
-      if (!Number.isInteger(price) || price <= 0) {
+    }
+    if (!Number.isInteger(price) || price <= 0) {
         return res.status(400).json({ error: "Dish must have a price that is an integer greater than 0" });
-      }
-      if (!image_url) {
+    }
+    if (!image_url) {
         return res.status(400).json({ error: "Dish must include an image_url" });
-      }
-      if (image_url === "") {
+    }
+    if (image_url === "") {
         return res.status(400).json({ error: "Dish must include an image_url" });
-      }
+    }
+    const foundDish = dishes.find((dish) => dish.id === dishId);
+    if (!foundDish) {
+    return res.status(404).json({ error: `Dish does not exist: ${dishId}` });
+    }
+    if (foundDish.id !== dishId) {
+    return res.status(400).json({ error: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}` });
+    }
 
     // Update the dish
     dish.name = name;
@@ -113,10 +121,12 @@ function destroy(req, res) {
     const index = dishes.findIndex(dish => dish.id === dishId);
 
     if (index !== -1) {
-        dishes.splice(index, 1);
-        return res.sendStatus(204);
+        // Dish exists, but returning 405 Method Not Allowed for existing dish
+        return res.status(405).json({ error: `Method Not Allowed for existing Dish ID ${dishId}` });
     }
-    res.status(404).json({ error: `Dish ID ${dishId} not found` });
+
+    // If dish does not exist, return 404 Not Found
+    return res.status(404).json({ error: `Dish ID ${dishId} not found` });
 }
 
 // List
