@@ -126,7 +126,7 @@ function destroy(req, res) {
     }
 
     // If dish does not exist, return 404 Not Found
-    return res.status(404).json({ error: `Dish ID ${dishId} not found` });
+    return res.status(405).json({ error: `Dish ID ${dishId} not found` });
 }
 
 // List
