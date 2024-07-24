@@ -30,7 +30,7 @@ function create(req, res) {
         price,
         image_url,
     };
-    orders.push(newDish);
+    dishes.push(newDish);
     res.status(201).json({ data: newDish });
 }
 
