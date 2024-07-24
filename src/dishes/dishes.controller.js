@@ -21,18 +21,46 @@ function dishExists(req, res, next) {
 }
 
 // Create
-function create(req, res) {
-    const { data: { name, description,  price, image_url } = {} } = req.body;
+function create(req, res, next) {
+    const { data: { name, description, price, image_url } = {} } = req.body;
+  
+    // Validations
+    if (!name) {
+      return res.status(400).json({ error: "Dish must include a name" });
+    }
+    if (name === "") {
+      return res.status(400).json({ error: "Dish must include a name" });
+    }
+    if (!description) {
+      return res.status(400).json({ error: "Dish must include a description" });
+    }
+    if (description === "") {
+      return res.status(400).json({ error: "Dish must include a description" });
+    }
+    if (!price) {
+      return res.status(400).json({ error: "Dish must include a price" });
+    }
+    if (!Number.isInteger(price) || price <= 0) {
+      return res.status(400).json({ error: "Dish must have a price that is an integer greater than 0" });
+    }
+    if (!image_url) {
+      return res.status(400).json({ error: "Dish must include an image_url" });
+    }
+    if (image_url === "") {
+      return res.status(400).json({ error: "Dish must include an image_url" });
+    }
+  
+    // Create new dish
     const newDish = {
-        id: nextId(),
-        name,
-        description,
-        price,
-        image_url,
+      id: nextId(),
+      name,
+      description,
+      price,
+      image_url,
     };
     dishes.push(newDish);
     res.status(201).json({ data: newDish });
-}
+  }
 
 // Read
 function read(req, res) {
@@ -43,6 +71,32 @@ function read(req, res) {
 function update(req, res) {
     const dish = res.locals.dish;
     const { data: { name, description,  price, image_url } = {} } = req.body;
+
+    // Validations
+    if (!name) {
+        return res.status(400).json({ error: "Dish must include a name" });
+      }
+      if (name === "") {
+        return res.status(400).json({ error: "Dish must include a name" });
+      }
+      if (!description) {
+        return res.status(400).json({ error: "Dish must include a description" });
+      }
+      if (description === "") {
+        return res.status(400).json({ error: "Dish must include a description" });
+      }
+      if (!price) {
+        return res.status(400).json({ error: "Dish must include a price" });
+      }
+      if (!Number.isInteger(price) || price <= 0) {
+        return res.status(400).json({ error: "Dish must have a price that is an integer greater than 0" });
+      }
+      if (!image_url) {
+        return res.status(400).json({ error: "Dish must include an image_url" });
+      }
+      if (image_url === "") {
+        return res.status(400).json({ error: "Dish must include an image_url" });
+      }
 
     // Update the dish
     dish.name = name;

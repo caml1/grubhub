@@ -21,18 +21,52 @@ function orderExists(req, res, next) {
 }
 
 // Create
-function create(req, res) {
+function create(req, res, next) {
     const { data: { deliverTo, mobileNumber, status, dishes } = {} } = req.body;
+  
+    // Validations
+    if (!deliverTo) {
+      return res.status(400).json({ error: "Order must include a deliverTo" });
+    }
+    if (deliverTo === "") {
+      return res.status(400).json({ error: "Order must include a deliverTo" });
+    }
+    if (!mobileNumber) {
+      return res.status(400).json({ error: "Order must include a mobileNumber" });
+    }
+    if (mobileNumber === "") {
+      return res.status(400).json({ error: "Order must include a mobileNumber" });
+    }
+    if (!dishes) {
+      return res.status(400).json({ error: "Order must include a dish" });
+    }
+    if (!Array.isArray(dishes)) {
+      return res.status(400).json({ error: "Order must include at least one dish" });
+    }
+    if (dishes.length === 0) {
+      return res.status(400).json({ error: "Order must include at least one dish" });
+    }
+    for (let i = 0; i < dishes.length; i++) {
+      const dish = dishes[i];
+      if (!dish.quantity) {
+        return res.status(400).json({ error: `Dish ${i} must have a quantity that is an integer greater than 0` });
+      }
+      if (!Number.isInteger(dish.quantity) || dish.quantity <= 0) {
+        return res.status(400).json({ error: `Dish ${i} must have a quantity that is an integer greater than 0` });
+      }
+    }
+  
+    // Create new order
     const newOrder = {
-        id: nextId(),
-        deliverTo,
-        mobileNumber,
-        status,
-        dishes,
+      id: nextId(),
+      deliverTo,
+      mobileNumber,
+      status,
+      dishes,
     };
     orders.push(newOrder);
     res.status(201).json({ data: newOrder });
-}
+  }
 
 // Read
 function read(req, res) {
@@ -43,6 +77,38 @@ function read(req, res) {
 function update(req, res) {
     const order = res.locals.order;
     const { data: { deliverTo, mobileNumber, status, dishes } = {} } = req.body;
+
+    // Validations
+    if (!deliverTo) {
+        return res.status(400).json({ error: "Order must include a deliverTo" });
+      }
+      if (deliverTo === "") {
+        return res.status(400).json({ error: "Order must include a deliverTo" });
+      }
+      if (!mobileNumber) {
+        return res.status(400).json({ error: "Order must include a mobileNumber" });
+      }
+      if (mobileNumber === "") {
+        return res.status(400).json({ error: "Order must include a mobileNumber" });
+      }
+      if (!dishes) {
+        return res.status(400).json({ error: "Order must include a dish" });
+      }
+      if (!Array.isArray(dishes)) {
+        return res.status(400).json({ error: "Order must include at least one dish" });
+      }
+      if (dishes.length === 0) {
+        return res.status(400).json({ error: "Order must include at least one dish" });
+      }
+      for (let i = 0; i < dishes.length; i++) {
+        const dish = dishes[i];
+        if (!dish.quantity) {
+          return res.status(400).json({ error: `Dish ${i} must have a quantity that is an integer greater than 0` });
+        }
+        if (!Number.isInteger(dish.quantity) || dish.quantity <= 0) {
+          return res.status(400).json({ error: `Dish ${i} must have a quantity that is an integer greater than 0` });
+        }
+      }
 
     // Update the order
     order.deliverTo = deliverTo;
