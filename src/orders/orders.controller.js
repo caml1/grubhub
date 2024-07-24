@@ -22,14 +22,13 @@ function orderExists(req, res, next) {
 
 // Create
 function create(req, res) {
-    const { data: { name, description, image_url, price, quantity } = {} } = req.body;
+    const { data: { deliverTo, mobileNumber, status, dishes } = {} } = req.body;
     const newOrder = {
         id: nextId(),
-        name,
-        description,
-        image_url,
-        price,
-        quantity,
+        deliverTo,
+        mobileNumber,
+        status,
+        dishes,
     };
     orders.push(newOrder);
     res.status(201).json({ data: newOrder });
@@ -43,14 +42,13 @@ function read(req, res) {
 // Update
 function update(req, res) {
     const order = res.locals.order;
-    const { data: { name, description, image_url, price, quantity } = {} } = req.body;
+    const { data: { deliverTo, mobileNumber, status, dishes } = {} } = req.body;
 
     // Update the order
-    order.name = name;
-    order.description = description;
-    order.image_url = image_url;
-    order.price = price;
-    order.quantity = quantity;
+    order.deliverTo = deliverTo;
+    order.mobileNumber = mobileNumber;
+    order.status = status;
+    order.dishes = dishes;
 
     res.json({ data: order });
 }
