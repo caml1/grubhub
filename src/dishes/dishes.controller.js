@@ -72,104 +72,39 @@ function update(req, res) {
   const dish = res.locals.dish;
   const { dishId } = req.params;
   const { data: { id, name, description, price, image_url } = {} } = req.body;
-  
-  
+
+  // Helper function to handle validation errors
+  const handleValidationError = (message) => res.status(400).json({ error: message });
 
   // Validations
-  if (!name) {
-    return res.status(400).json({ error: "Dish must include a name" });
-  }
-    if (name === "") {
-        return res.status(400).json({ error: "Dish must include a name" });
-    }
-    if (!description) {
-        return res.status(400).json({ error: "Dish must include a description" });
-    }
-    if (description === "") {
-        return res.status(400).json({ error: "Dish must include a description" });
-    }
-    if (!price) {
-        return res.status(400).json({ error: "Dish must include a price" });
-    }
-    if (!Number.isInteger(price) || price <= 0) {
-        return res.status(400).json({ error: "Dish must have a price that is an integer greater than 0" });
-    }
-    if (!image_url) {
-        return res.status(400).json({ error: "Dish must include an image_url" });
-    }
-    if (image_url === "") {
-        return res.status(400).json({ error: "Dish must include an image_url" });
-    }
-    if (id !== dishId) {
-      if (id === "") {
-        // Update the dish
-      dish.name = name;
-      dish.description = description;
-      dish.price = price;
-      dish.image_url = image_url;
-
-      res.json({ data: dish });
-      }
-      if (id === null) {
-        // Update the dish
-      dish.name = name;
-      dish.description = description;
-      dish.price = price;
-      dish.image_url = image_url;
-
-      res.json({ data: dish });
-      }
-      if (id === undefined) {
-        // Update the dish
-      dish.name = name;
-      dish.description = description;
-      dish.price = price;
-      dish.image_url = image_url;
-
-      res.json({ data: dish });
-      }
-
-    return res.status(400).json({ error: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}` });
-    //return res.status(400).json({dish});
-  }
-
-
-    const foundDish = dishes.find((dish) => dish.id === dishId);
-    if (!foundDish) {
-    return res.status(404).json({ error: `Dish does not exist: ${dishId}` });
-    }
-    if (foundDish.id !== undefined) {
-      //Update the dish
-      dish.name = name;
-      dish.description = description;
-      dish.price = price;
-      dish.image_url = image_url;
-
-      res.json({ data: dish });
-    }
-    if (id !== dishId) {
-
+  if (!name || name === "") return handleValidationError("Dish must include a name");
+  if (!description || description === "") return handleValidationError("Dish must include a description");
+  if (!price) return handleValidationError("Dish must include a price");
+  if (!Number.isInteger(price) || price <= 0) return handleValidationError("Dish must have a price that is an integer greater than 0");
+  if (!image_url || image_url === "") return handleValidationError("Dish must include an image_url");
+  if (id !== dishId) {
+    // Check for empty string, null, or undefined
+    if (id === "" || id === null || id === undefined) {
       // Update the dish
-      // dish.name = name;
-      // dish.description = description;
-      // dish.price = price;
-      // dish.image_url = image_url;
-      console.log("dishId:", dishId);
-      console.log("id:", id);
-      // return res.status(400).json({ error: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}` });
-      return res.status(400).json({dish});
+      dish.name = name;
+      dish.description = description;
+      dish.price = price;
+      dish.image_url = image_url;
+  
+      return res.json({ data: dish });
     }
-    if (id !== null) {
-
-    // Update the dish
-    dish.name = name;
-    dish.description = description;
-    dish.price = price;
-    dish.image_url = image_url;
-
-    res.json({ data: dish });
+  
+    // If id is defined and not matching dishId
+    return res.status(400).json({ error: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}` });
   }
-   
+
+  // Update the dish
+  dish.name = name;
+  dish.description = description;
+  dish.price = price;
+  dish.image_url = image_url;
+
+  return res.json({ data: dish });
 }
 
 // Delete
