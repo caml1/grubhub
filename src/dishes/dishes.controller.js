@@ -72,11 +72,13 @@ function update(req, res) {
   const dish = res.locals.dish;
   const { dishId } = req.params;
   const { data: { id, name, description, price, image_url } = {} } = req.body;
+  
+  
 
-    // Validations
-    if (!name) {
-        return res.status(400).json({ error: "Dish must include a name" });
-    }
+  // Validations
+  if (!name) {
+    return res.status(400).json({ error: "Dish must include a name" });
+  }
     if (name === "") {
         return res.status(400).json({ error: "Dish must include a name" });
     }
@@ -98,23 +100,66 @@ function update(req, res) {
     if (image_url === "") {
         return res.status(400).json({ error: "Dish must include an image_url" });
     }
+    if (id !== dishId) {
+      if (id === "") {
+        // Update the dish
+      dish.name = name;
+      dish.description = description;
+      dish.price = price;
+      dish.image_url = image_url;
+
+      res.json({ data: dish });
+      }
+      if (id === null) {
+        // Update the dish
+      dish.name = name;
+      dish.description = description;
+      dish.price = price;
+      dish.image_url = image_url;
+
+      res.json({ data: dish });
+      }
+      if (id === undefined) {
+        // Update the dish
+      dish.name = name;
+      dish.description = description;
+      dish.price = price;
+      dish.image_url = image_url;
+
+      res.json({ data: dish });
+      }
+
+    return res.status(400).json({ error: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}` });
+    //return res.status(400).json({dish});
+  }
+
+
     const foundDish = dishes.find((dish) => dish.id === dishId);
     if (!foundDish) {
     return res.status(404).json({ error: `Dish does not exist: ${dishId}` });
     }
-    if (foundDish.id !== dishId) {
-    return res.status(400).json({ error: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}` });
-    }
-    // Check if the id in the data matches the dishId in the route
-  // if (id !== dishId) {
-  //   // Update the dish
-  //   dish.name = name;
-  //   dish.description = description;
-  //   dish.price = price;
-  //   dish.image_url = image_url;
+    if (foundDish.id !== undefined) {
+      //Update the dish
+      dish.name = name;
+      dish.description = description;
+      dish.price = price;
+      dish.image_url = image_url;
 
-  //   return res.status(400).json({ error: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}` });
-  // }
+      res.json({ data: dish });
+    }
+    if (id !== dishId) {
+
+      // Update the dish
+      // dish.name = name;
+      // dish.description = description;
+      // dish.price = price;
+      // dish.image_url = image_url;
+      console.log("dishId:", dishId);
+      console.log("id:", id);
+      // return res.status(400).json({ error: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}` });
+      return res.status(400).json({dish});
+    }
+    if (id !== null) {
 
     // Update the dish
     dish.name = name;
@@ -123,6 +168,8 @@ function update(req, res) {
     dish.image_url = image_url;
 
     res.json({ data: dish });
+  }
+   
 }
 
 // Delete
